@@ -1,0 +1,518 @@
+# Example code for get post/posts 
+swagger: '2.0'
+
+# Document metadata
+info:
+  version: "0.0.0"
+  title: Test Swagger Project
+
+# Describe your paths here
+host: swagger.io
+basePath: /v1
+tags:
+  - name: posts
+    description: Access to Posts |
+      |Single Post - Name or Id or Highlighted query should be present|
+      |Multiple Posts - Name, Id & Highlighted query should Not be present|
+paths: 
+  /posts:
+    get:
+      tags: 
+        - posts
+      summary: Retrieve a list of posts
+      description: ""
+      parameters:
+        - in: query
+          name: id
+          description: Post id for single post
+          required: false
+          type: integer
+          format: int32
+        - in: query
+          name: name
+          description: Post name for single post
+          required: false
+          type: string
+        - in: query
+          name: highlighted
+          description: Post highlighted condition for single post
+          required: false
+          type: integer
+          format: int32
+        - in: query
+          name: usePostsQueue
+          description: Whether to use posts_queue rank
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: startRank
+          description: Start rank from where the posts are to be fetched
+          required: false
+          type: integer
+          format: int32
+          default: 1
+        - in: query
+          name: endRank
+          description: End rank to which the posts are to be fetched
+          required: false
+          type: integer
+          format: int32
+          default : 10
+        - in: query
+          name: queueCountry
+          description: Counrty for the queue
+          required: false
+          type: string
+          default: "ES"
+          enum:
+            - ES
+            - US
+            - PE
+            - MX
+            - CO
+            - ROW
+        - in: query
+          name: offset
+          description: Start position from where the results are to be fetched
+          required: false
+          type: integer
+          format: int32
+          default: 0
+        - in: query
+          name: limit
+          description: Number of Results To be retrieved
+          required: false
+          type: integer
+          format: int32
+          default: 10
+        - in: query
+          name: isPublished
+          description: Condition to retrieve published post
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: conditions
+          description: Conditions to retrieve the post i.e. ("post_name","post_id")
+          required: false
+          type: array
+          items:
+            type: string
+        - in: query
+          name: sort
+          description: Parameters to sort the result
+          required: false
+          type: array
+          items:
+            type: string
+        - in: query
+          name: sortBy
+          description: Keeps record of sorting order
+          required: false
+          type: string
+          default: "DATE"
+          enum:
+            - "DATE"
+            - "RANK"
+            - "RANK2"
+            - "VOTES"
+            - "COMMENTS"
+            - "SUGGESTED_POST"
+            - "CAROUSEL_POST"
+        - in: query
+          name: status
+          description: Post Status Condition
+          required: false
+          type: array
+          items: 
+            type: string
+            enum:
+              - "PUBLISH"
+              - "DRAFT"
+              - "FUTURE"
+              - "DELETED"
+              - "ANY"
+            default: "PUBLISH"
+          
+        - in: query
+          name: getByTag
+          description: Creates Condition to get Posts By Tag
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: tag
+          description: Tag Id , if Posts are to be retrieved for tag id instead of tag Name
+          required: false
+          type: string
+          default: ""
+        - in: query
+          name: getByCategory
+          description: Creates Condition to get Posts By Category
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: category
+          description: Category , if Posts are to be retrieved by category id or category nicename
+          required: false
+          type: string
+          default: ""
+        - in: query
+          name: useExtraFields
+          description: Option to use extra Post fields or Not
+          required: false
+          type: boolean
+          default: true
+        - in: query
+          name: postType
+          description: Post Type Condition
+          required: false
+          type: array
+          items:
+            type: string
+            enum: 
+              - "NORMAL"
+              - "CLUB"
+              - "RECIPE"
+              - "FORUM"
+              - "SLIDESHOW"
+              - "REPOSTEDPOST"
+              - "REPOSTEDBRANDEDPOST"
+              - "RECIPE_POST"
+              - "REPOSTED_DUPLICATE"
+              - "ANY"
+            default: "NORMAL"
+          
+        - in: query
+          name: author
+          description: Post Author ID
+          required: false
+          type: integer
+          format: int32
+          default: 0
+        - in: query
+          name: userId
+          description: Post User ID, if no author but user is associated to a post ( can be author )
+          required: false
+          type: integer
+          format: int32
+          default: 0
+        - in: query
+          name: forumEnabled
+          description: Get related respuestas
+          required: false
+          type: boolean
+          default: true
+        - in: query
+          name: getMetaDescription
+          description: Join post titles to get meta description
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getRecentPublishedPosts
+          description: Get Posts Published in Last 24 Hours
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: days
+          description: No. of days to get recent published posts
+          required: false
+          type: integer
+          format: int32
+          default: 1
+        - in: query
+          name: getVisiblePosts
+          description: Get Branded club posts that are visible on homepage
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: postsBetweenBrandedClubs
+          description: Difference of posts
+          required: false
+          type: integer
+          default: 0
+        - in: query
+          name: getRepostedBrandedPost
+          description: if Branded Club Posts are to be retrieved by country by using post meta
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: country
+          description: Country , if Branded Club Posts are to be retrieved by country
+          required: false
+          type: string
+          default: ""
+        - in: query
+          name: getByFilters
+          description: Get posts by keyword
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: keyword
+          description: Search posts by keyword
+          required: false
+          type: string
+          default: ""
+        - in: query
+          name: keywordFields
+          description: Post fields to search in keyword case i.e. ("post_title","post_content")
+          required: false
+          type: array
+          items:
+            type: string
+        - in: query
+          name: getByDate
+          description: getByDate , if Posts are to be retrieved by date
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: fromDate
+          description: Search posts from this date
+          required: false
+          type: string
+          default: "0000-00-00"
+        - in: query
+          name: toDate
+          description: Search posts till this date
+          required: false
+          type: string
+          default: "0000-00-00"
+        - in: query
+          name: getGalleries
+          description: Get image galleries
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: sliceMergedPosts
+          description: Pad merged posts, to fetch selected records from merged posts
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: mergedPostsOffset
+          description: Start position from where the merged posts are to be fetched
+          required: false
+          type: integer
+          format: int32
+          default: 0
+        - in: query
+          name: mergedPostsLimit
+          description: Number of Results To be retrieved from merged posts
+          required: false
+          type: integer
+          format: int32
+          default: 10
+        - in: query
+          name: getLastCommentedDate
+          description: getLastCommentedDate , if last commented date is to be fetched
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getByCommentCount
+          description: Creates Condition to get Posts By Comment Count
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getByMoreThanCommentCount
+          description: Creates Condition to get Posts with Comment Count greater than three
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: commentCount
+          description: Fetches post(s) with this comment count, if getByCommentCount is true
+          required: false
+          type: integer
+          format: int32
+          default: 0
+        - in: query
+          name: getAvatarFields
+          description: istrue, if post author avatar is to be fetched
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getRespuestasPost
+          description: Get Forum post that will be visible on homepage
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getRepostedPost
+          description: Get reposted post i.e. Post published from other blog
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: fetchRepostedBrandedPost
+          description: Fetch reposted post i.e. this is called internally if getRepostedPost is true and country is passed
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: includeAuthorPosts
+          description: Fetch posts by authorId if true & by excluding authorId if false
+          required: false
+          type: boolean
+          default: true
+        - in: query
+          name: getSpecialPosts
+          description: Get posts including special posts as well
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getCarouselSuperPosts
+          description: Get carousel or super posts
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getLongPosts
+          description: Get long posts
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getSuperPost
+          description: Get super post i.e. Post with special post priority = 5
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getCarouselPost
+          description: Get carousal i.e. Post with special post priority != 5 and special post date > now
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: useCustomRecommendations
+          description: Get Posts By Our Recommendations Algorithm
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: clubPostRecommendationFrequency
+          description: Club post frequency to show in recommendations
+          required: false
+          type: number
+          format: float
+          default: 0
+        - in: query
+          name: postRecommendationWeights
+          description: Property to hold custom weights for cateogories, products and tags for calculating recommendations.
+          required: false
+          type: array
+          items:
+            type: string
+        - in: query
+          name: getGalleryByVisibility
+          description: Get image galleries irrespective of their visibility on frontend
+          required: false
+          type: boolean
+          default: true
+        - in: query
+          name: getPostStats
+          description: Get post stats
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getEcommerceProductsData
+          description: Get ecommerce data in products
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getCountries
+          description: Get Countries in get post
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: defaultPlatforms
+          description: Property to hold default platforms to fetch data for ecommerce (like gaming platforms)
+          required: false
+          type: array
+          items: 
+            type: string
+        - in: query
+          name: getCommentCount
+          description: Get Comment count of post
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: excludePostTypes
+          description: Post types to exclude from result
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: useBucketForGalleries
+          description: Determines whether to fetch gallery Images from wp_postgallery_images or not
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: usePostContentRendered
+          description: Determines whether to fetch post_content_rendered instead of post_content_filtered or not
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getVideos
+          description: Get Videos
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getHighlightedPost
+          description: Get highlighted post
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: getByPrimaryCategory
+          description: Get posts by primary category only
+          required: false
+          type: boolean
+          default: false
+        - in: query
+          name: usePostContentAmp
+          description: Determines whether to fetch post_content_amp instead of post_content_filtered or not
+          required: false
+          type: boolean
+          default: false
+          
+          
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            title: ArrayOfPosts
+            type: array
+            items:
+              title: Post
+              type: object
+              properties:
+                name:
+                  type: string
+                available:
+                  type: boolean
+                  default: false
